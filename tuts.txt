@@ -1,0 +1,34 @@
+Completely removed the 🎬 Scene 4, 🎬 Scene 5, 🎬 Scene 6, ⚡ Meltdown, and ↺ Reset Take buttons from the UI. The header now looks authentic (PAYCORE / OPERATIONS and ● Live monitoring | PRODUCTION).
+
+Keyboard Shortcuts:
+- 1: Open Terminal 2 (Floating Audit Log Window)
+- F4 or Alt + 4: Switch to Scene 4
+- F5 or Alt + 5: Switch to Scene 5 (browser reload intercepted)
+- F6 or Alt + 6: Switch to Scene 6
+- F7 or Alt + 1 or Alt + L: Open/Toggle Terminal 2
+- F8 or Alt + M: Trigger Critical Meltdown
+- F9 or Alt + R: Reset Take
+- Escape: Close Floating Terminal 2 or Dismiss Hacked Popups
+
+Terminal 2 (Floating Audit Terminal) - Actor-Driven Predestined Typing:
+1. Trigger: Press 1 (or F7 / Alt+1).
+   - Pops up a realistic floating Ubuntu/Linux terminal window titled "jake@workstation: ~/audit · bash".
+   - Shows clean initial prompt: "jake@workstation:~$ " with a blinking cursor.
+   - NO auto-typing: it waits for you to type on camera!
+2. Typing: Press ANY keys on your keyboard.
+   - Every keystroke automatically types the predestined command:
+     cat /var/log/audit/execution.log
+   - Type at whatever speed you want to match your dialogue and camera close-up!
+   - Backspace: Erases character by character if you want to pause or correct.
+   - Tab: Autocompletes the rest of the command instantly.
+3. Execution: Press Enter.
+   - Immediately executes the command.
+   - Displays subsystem verification and the glowing red EXECUTION LOG card:
+     * User: jake_admin
+     * Remote IP: 192.168.1.104 [Jake's IP]
+     * Status: Failed
+     * Auth Key: Signed by jake_admin_privkey
+     * “May gumagamit ba ng account ko?” — What if I've been set up?
+4. Controls:
+   - Window controls: [✕ Close] [- Minimize] [□ Maximize]
+   - Draggable titlebar for perfect camera framing.

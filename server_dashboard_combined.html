@@ -1,0 +1,2849 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PAYCORE | Operations Console - Short Film Props</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080d16;
+      --panel: #101827;
+      --panel2: #0c1421;
+      --line: #263448;
+      --muted: #8291a7;
+      --text: #e7edf6;
+      --soft: #b8c4d5;
+      --green: #3ddc97;
+      --amber: #f4b942;
+      --red: #ff4d6d;
+      --blue: #6ea8ff;
+      --shadow: 0 18px 45px rgba(0, 0, 0, .25);
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html,
+    body {
+      height: 100%;
+      margin: 0
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+      overflow: hidden;
+      transition: background .6s ease
+    }
+
+    button,
+    input,
+    textarea {
+      font: inherit
+    }
+
+    .app {
+      height: 100dvh;
+      min-height: 560px;
+      display: grid;
+      grid-template-rows: 58px minmax(0, 1fr);
+      background: radial-gradient(ellipse at 18% 0%, rgba(42, 75, 126, .13), transparent 38%), var(--bg);
+      transition: all .8s ease;
+      position: relative;
+    }
+
+    /* SCREEN FLICKER / GLITCH EFFECT FOR SCENE 6 */
+    @keyframes screen-glitch {
+      0% {
+        transform: translate(0);
+        filter: hue-rotate(0deg) contrast(1);
+      }
+
+      15% {
+        transform: translate(-3px, 1px);
+        filter: contrast(1.4) brightness(1.2) hue-rotate(15deg);
+      }
+
+      30% {
+        transform: translate(3px, -2px);
+        filter: contrast(1.6) hue-rotate(-20deg);
+      }
+
+      45% {
+        transform: translate(-2px, -1px);
+        filter: brightness(1.3);
+      }
+
+      60% {
+        transform: translate(2px, 2px);
+        filter: hue-rotate(30deg);
+      }
+
+      75% {
+        transform: translate(-1px, 1px);
+        filter: contrast(1.5);
+      }
+
+      100% {
+        transform: translate(0);
+        filter: none;
+      }
+    }
+
+    .app.screen-flicker {
+      animation: screen-glitch 0.4s 3 ease-in-out;
+    }
+
+    /* CRITICAL RED MELTDOWN STATE FOR SCENE 5 & 6 */
+    .app.meltdown {
+      background: radial-gradient(ellipse at 50% 10%, rgba(255, 40, 75, .25), transparent 55%), #0c0608;
+      box-shadow: inset 0 0 100px rgba(255, 30, 60, .22);
+    }
+
+    .app.meltdown .topbar {
+      background: rgba(35, 10, 16, .96);
+      border-bottom: 1px solid #771f2c;
+    }
+
+    .app.meltdown .brand-mark {
+      border-color: var(--red);
+      color: var(--red);
+      background: rgba(255, 77, 109, .15);
+      animation: pulse-red 1s infinite alternate;
+    }
+
+    .app.meltdown .health {
+      border-color: rgba(255, 77, 109, .55);
+      background: rgba(255, 77, 109, .16);
+      color: #ff6b84;
+      animation: flash-border 1.2s infinite;
+    }
+
+    .app.meltdown .health .dot {
+      background: var(--red);
+      box-shadow: 0 0 14px var(--red);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(10, 16, 27, .96);
+      transition: all .5s ease
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      font-size: 13px
+    }
+
+    .brand-mark {
+      width: 27px;
+      height: 27px;
+      border: 1px solid rgba(61, 220, 151, .55);
+      border-radius: 8px;
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-size: 15px;
+      background: rgba(61, 220, 151, .08);
+      transition: all .4s
+    }
+
+    .top-meta {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: .06em;
+      text-transform: uppercase
+    }
+
+    .live {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #b9c7d8
+    }
+
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 10px rgba(61, 220, 151, .7);
+      transition: all .4s
+    }
+
+    .workspace {
+      display: grid;
+      grid-template-columns: minmax(0, 1.65fr) minmax(330px, .85fr);
+      min-height: 0
+    }
+
+    .monitor {
+      padding: 20px 22px;
+      display: grid;
+      grid-template-rows: auto auto auto minmax(190px, 1fr);
+      gap: 14px;
+      min-width: 0;
+      min-height: 0
+    }
+
+    .page-head {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 15px
+    }
+
+    .eyebrow {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      margin-bottom: 6px
+    }
+
+    h1 {
+      font-size: 20px;
+      line-height: 1.2;
+      margin: 0;
+      font-weight: 650;
+      letter-spacing: -.025em;
+      transition: color .4s
+    }
+
+    .app.meltdown h1 {
+      color: #ff98a8
+    }
+
+    .host {
+      color: var(--muted);
+      font-size: 11px;
+      margin-top: 6px
+    }
+
+    .host strong {
+      color: var(--soft);
+      font-weight: 550
+    }
+
+    .health {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      border: 1px solid rgba(244, 185, 66, .25);
+      background: rgba(244, 185, 66, .07);
+      border-radius: 7px;
+      color: var(--amber);
+      font-size: 10px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      white-space: nowrap;
+      transition: all .5s
+    }
+
+    .health .dot {
+      background: var(--amber);
+      box-shadow: 0 0 9px rgba(244, 185, 66, .55)
+    }
+
+    /* INCIDENT ALERT BANNER (SCENE 6) */
+    .incident-alert-banner {
+      display: none;
+      background: linear-gradient(135deg, rgba(46, 14, 22, .96), rgba(32, 8, 14, .96));
+      border: 1px solid rgba(255, 77, 109, .5);
+      border-radius: 8px;
+      padding: 10px 14px;
+      box-shadow: 0 8px 24px rgba(255, 50, 80, .2);
+      animation: flash-border 1.5s infinite;
+    }
+
+    .incident-alert-banner.show {
+      display: block
+    }
+
+    .incident-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 6px
+    }
+
+    .incident-title {
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: #ff5e79;
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .incident-severity {
+      font-size: 9px;
+      font-weight: 700;
+      color: #ff8fa2;
+      background: rgba(255, 77, 109, .2);
+      border: 1px solid rgba(255, 77, 109, .4);
+      padding: 2px 6px;
+      border-radius: 4px
+    }
+
+    .incident-items {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 5px;
+      font-size: 10px;
+      color: #fce4e8
+    }
+
+    .incident-item {
+      display: flex;
+      align-items: center;
+      gap: 6px
+    }
+
+    .blink-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--red);
+      animation: pulse-red .8s infinite alternate
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px
+    }
+
+    .metric,
+    .panel {
+      background: linear-gradient(145deg, rgba(18, 28, 44, .98), rgba(13, 21, 34, .98));
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      box-shadow: var(--shadow);
+      transition: all .5s ease
+    }
+
+    .app.meltdown .metric,
+    .app.meltdown .panel {
+      background: linear-gradient(145deg, rgba(30, 12, 18, .98), rgba(20, 8, 12, .98));
+      border-color: rgba(255, 77, 109, .3);
+    }
+
+    .metric {
+      padding: 13px 14px;
+      min-width: 0
+    }
+
+    .metric-label {
+      font-size: 10px;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      white-space: nowrap
+    }
+
+    .metric-value {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+      margin-top: 9px;
+      font-size: 24px;
+      font-weight: 650;
+      letter-spacing: -.04em;
+      transition: color .4s
+    }
+
+    .metric-value small {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--muted);
+      letter-spacing: 0
+    }
+
+    .metric-foot {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 7px;
+      color: var(--muted);
+      font-size: 10px;
+      white-space: nowrap
+    }
+
+    .mini-bar {
+      height: 3px;
+      background: #263448;
+      border-radius: 9px;
+      overflow: hidden;
+      margin-top: 10px
+    }
+
+    .mini-bar span {
+      display: block;
+      height: 100%;
+      border-radius: 9px;
+      transition: width .7s ease, background .5s ease
+    }
+
+    .green {
+      color: var(--green)
+    }
+
+    .amber {
+      color: var(--amber)
+    }
+
+    .red {
+      color: var(--red)
+    }
+
+    .terminal {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      overflow: hidden
+    }
+
+    .panel-head {
+      height: 43px;
+      flex: none;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 15px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .panel-title {
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #cbd5e3
+    }
+
+    .panel-meta {
+      font-size: 10px;
+      color: var(--muted)
+    }
+
+    .terminal-body {
+      padding: 13px 15px 9px;
+      overflow: auto;
+      flex: 1;
+      min-height: 0;
+      background: linear-gradient(180deg, rgba(3, 8, 15, .38), rgba(3, 8, 15, .12));
+      font: 11px/1.8 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      color: #b6c4d5
+    }
+
+    .term-line {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere
+    }
+
+    .term-time {
+      color: #63748b;
+      margin-right: 9px
+    }
+
+    .term-ok {
+      color: var(--green)
+    }
+
+    .term-info {
+      color: #a9b8ca
+    }
+
+    .term-warn {
+      color: var(--amber)
+    }
+
+    .term-error {
+      color: var(--red)
+    }
+
+    .term-highlight-error {
+      color: #fff;
+      background: rgba(255, 77, 109, .3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 700
+    }
+
+    .terminal-input-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-top: 1px solid var(--line);
+      background: #0a111d;
+      font: 11px "SFMono-Regular", Consolas, monospace
+    }
+
+    .prompt {
+      color: var(--green);
+      white-space: nowrap;
+      transition: color .4s
+    }
+
+    .app.meltdown .prompt {
+      color: var(--red)
+    }
+
+    .terminal-input {
+      width: 100%;
+      min-width: 0;
+      background: transparent;
+      border: 0;
+      outline: 0;
+      color: #e2f5eb;
+      caret-color: var(--green);
+      font: inherit
+    }
+
+    .terminal-input::placeholder {
+      color: #526177
+    }
+
+    .chat {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      min-width: 0;
+      border-left: 1px solid var(--line);
+      background: rgba(12, 19, 31, .96);
+      transition: all .5s ease
+    }
+
+    .app.meltdown .chat {
+      background: rgba(22, 10, 16, .96);
+      border-left-color: rgba(255, 77, 109, .3);
+    }
+
+    .chat-head {
+      padding: 17px 18px 13px;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .chat-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px
+    }
+
+    .chat-title {
+      font-size: 13px;
+      font-weight: 650
+    }
+
+    .secure {
+      font-size: 9px;
+      color: var(--green);
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 5px
+    }
+
+    .client-row {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      margin-top: 12px
+    }
+
+    .avatar {
+      width: 29px;
+      height: 29px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: #24344b;
+      border: 1px solid #344761;
+      color: #dce7f6;
+      font-size: 10px;
+      font-weight: 700
+    }
+
+    .client-info {
+      min-width: 0
+    }
+
+    .client-name {
+      font-size: 11px;
+      font-weight: 600;
+      color: #dce5f1
+    }
+
+    .client-status {
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 3px
+    }
+
+    .chat-history {
+      flex: 1;
+      min-height: 0;
+      overflow: auto;
+      padding: 15px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px
+    }
+
+    .day-divider {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      color: #66758a;
+      font-size: 9px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      margin: 1px 0 2px
+    }
+
+    .day-divider:before,
+    .day-divider:after {
+      content: "";
+      height: 1px;
+      background: #263448;
+      flex: 1
+    }
+
+    .message {
+      max-width: 91%;
+      display: flex;
+      flex-direction: column;
+      gap: 4px
+    }
+
+    .message.client {
+      align-self: flex-start
+    }
+
+    .message.jake {
+      align-self: flex-end
+    }
+
+    .message-meta {
+      display: flex;
+      gap: 7px;
+      align-items: center;
+      color: #738198;
+      font-size: 9px
+    }
+
+    .message.jake .message-meta {
+      justify-content: flex-end
+    }
+
+    .bubble {
+      padding: 9px 11px;
+      border-radius: 10px;
+      font-size: 11px;
+      line-height: 1.55;
+      overflow-wrap: anywhere
+    }
+
+    .client .bubble {
+      background: #1a2638;
+      border: 1px solid #2b3a50;
+      color: #d8e1ed;
+      border-top-left-radius: 3px
+    }
+
+    .jake .bubble {
+      background: #193354;
+      border: 1px solid #2a4b73;
+      color: #e7f0ff;
+      border-top-right-radius: 3px
+    }
+
+    .message.recent {
+      opacity: .58
+    }
+
+    /* FILE ATTACHMENT CARD FOR SCENE 5 */
+    .file-card {
+      background: #121e2e;
+      border: 1px solid #2c425e;
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .2);
+    }
+
+    .file-card-top {
+      display: flex;
+      align-items: center;
+      gap: 9px
+    }
+
+    .file-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      background: rgba(110, 168, 255, .15);
+      border: 1px solid rgba(110, 168, 255, .3);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 15px;
+    }
+
+    .file-meta-name {
+      font-weight: 600;
+      font-size: 11px;
+      color: #e2ecf8
+    }
+
+    .file-meta-sub {
+      font-size: 9px;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .file-perm-badge {
+      font-size: 9px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(244, 185, 66, .12);
+      border: 1px solid rgba(244, 185, 66, .3);
+      color: var(--amber);
+      padding: 3px 7px;
+      border-radius: 4px;
+      width: fit-content;
+    }
+
+    .file-download-btn {
+      background: rgba(61, 220, 151, .15);
+      border: 1px solid rgba(61, 220, 151, .4);
+      color: var(--green);
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all .2s;
+    }
+
+    .file-download-btn:hover {
+      background: rgba(61, 220, 151, .25)
+    }
+
+    .file-download-btn.downloaded {
+      background: rgba(255, 255, 255, .05);
+      border-color: var(--line);
+      color: #93a4b9;
+      cursor: default;
+    }
+
+    .chat-composer {
+      padding: 12px 14px 14px;
+      border-top: 1px solid var(--line);
+      background: #0b1220;
+      transition: all .4s
+    }
+
+    .app.meltdown .chat-composer {
+      background: #15090e;
+      border-top-color: rgba(255, 77, 109, .3)
+    }
+
+    .composer-label {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: #718097;
+      font-size: 9px;
+      letter-spacing: .07em;
+      text-transform: uppercase;
+      margin-bottom: 7px
+    }
+
+    .chat-textarea {
+      width: 100%;
+      height: 67px;
+      resize: none;
+      display: block;
+      padding: 10px 11px;
+      background: #111b2a;
+      border: 1px solid #2a394e;
+      border-radius: 7px;
+      color: #e5edf8;
+      font-size: 11px;
+      line-height: 1.5;
+      outline: none;
+      caret-color: var(--blue)
+    }
+
+    .app.meltdown .chat-textarea {
+      background: #1c0d13;
+      border-color: #4a1e27;
+      color: #ffeef2
+    }
+
+    .chat-textarea:focus {
+      border-color: #557eae;
+      box-shadow: 0 0 0 2px rgba(110, 168, 255, .08)
+    }
+
+    .chat-textarea::placeholder {
+      color: #65748a
+    }
+
+    .composer-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+      color: #637188;
+      font-size: 9px
+    }
+
+    .keycap {
+      padding: 3px 6px;
+      border: 1px solid #35445a;
+      border-radius: 4px;
+      color: #9aa8bb;
+      font: 9px "SFMono-Regular", Consolas, monospace
+    }
+
+    .typing {
+      display: inline-flex;
+      gap: 3px;
+      align-items: center;
+      padding: 10px 12px;
+      background: #1a2638;
+      border: 1px solid #2b3a50;
+      border-radius: 10px;
+      border-top-left-radius: 3px
+    }
+
+    .typing i {
+      width: 4px;
+      height: 4px;
+      background: #93a3b9;
+      border-radius: 50%;
+      animation: blink 1s infinite ease-in-out
+    }
+
+    .typing i:nth-child(2) {
+      animation-delay: .15s
+    }
+
+    .typing i:nth-child(3) {
+      animation-delay: .3s
+    }
+
+    /* BOTTOM-LEFT DOWNLOAD SUCCESS MODAL */
+    .download-modal {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      width: 340px;
+      background: linear-gradient(135deg, #101c2e, #0b1523);
+      border: 1px solid #2b4669;
+      border-radius: 10px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, .5), 0 0 20px rgba(61, 220, 151, .15);
+      z-index: 999;
+      padding: 12px 14px;
+      opacity: 0;
+      transform: translateY(25px) scale(0.96);
+      pointer-events: none;
+      transition: all .35s cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .download-modal.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .dl-modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px
+    }
+
+    .dl-badge-success {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--green);
+      letter-spacing: .04em;
+      text-transform: uppercase
+    }
+
+    .dl-check {
+      width: 16px;
+      height: 16px;
+      background: rgba(61, 220, 151, .2);
+      border: 1px solid rgba(61, 220, 151, .6);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 10px
+    }
+
+    .dl-header-right {
+      display: flex;
+      align-items: center;
+      gap: 8px
+    }
+
+    .dl-countdown-badge {
+      font-size: 10px;
+      font-weight: 600;
+      color: var(--muted);
+      background: rgba(255, 255, 255, .07);
+      border: 1px solid rgba(255, 255, 255, .12);
+      padding: 1px 6px;
+      border-radius: 4px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: .02em;
+    }
+
+    .dl-close-btn {
+      background: transparent;
+      border: 0;
+      color: var(--muted);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1
+    }
+
+    .dl-close-btn:hover {
+      color: #fff
+    }
+
+    .dl-modal-content {
+      display: flex;
+      align-items: center;
+      gap: 11px
+    }
+
+    .dl-file-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: rgba(110, 168, 255, .15);
+      border: 1px solid rgba(110, 168, 255, .3);
+      color: var(--blue);
+      display: grid;
+      place-items: center;
+      font-size: 18px;
+      flex-shrink: 0
+    }
+
+    .dl-file-info {
+      min-width: 0;
+      flex: 1
+    }
+
+    .dl-file-name {
+      font-size: 12px;
+      font-weight: 650;
+      color: #e7f0fd;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis
+    }
+
+    .dl-file-sub {
+      font-size: 10px;
+      color: var(--muted);
+      margin-top: 2px
+    }
+
+    .dl-file-path {
+      font-size: 9px;
+      color: #859bb5;
+      margin-top: 4px
+    }
+
+    .dl-file-path code {
+      background: rgba(0, 0, 0, .3);
+      padding: 2px 4px;
+      border-radius: 3px;
+      color: #9ec2eb;
+      font-family: monospace
+    }
+
+    .dl-progress-track {
+      height: 3px;
+      background: rgba(255, 255, 255, .08);
+      border-radius: 4px;
+      overflow: hidden;
+      margin-top: 10px
+    }
+
+    .dl-progress-fill {
+      height: 100%;
+      background: var(--green);
+      width: 100%;
+      transition: width 3.5s linear
+    }
+
+    /* HACKED / CYBER BREACH POPUPS */
+    .hacked-popup-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    .hacked-popup {
+      position: fixed;
+      width: 400px;
+      max-width: calc(100vw - 36px);
+      background: linear-gradient(135deg, rgba(40, 10, 18, .97), rgba(20, 4, 8, .98));
+      border: 1px solid #ff4d6d;
+      border-radius: 10px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, .85), 0 0 35px rgba(255, 77, 109, .4);
+      padding: 14px 16px;
+      color: #ffeef2;
+      pointer-events: auto;
+      opacity: 0;
+      transform: scale(0.9) translateY(15px);
+      transition: all .25s cubic-bezier(.16, 1, .3, 1);
+      animation: popup-jolt .35s ease forwards;
+    }
+
+    @keyframes popup-jolt {
+      0% {
+        opacity: 0;
+        transform: scale(0.88) translateY(20px)
+      }
+
+      50% {
+        transform: scale(1.03) translateY(-3px)
+      }
+
+      100% {
+        opacity: 1;
+        transform: scale(1) translateY(0)
+      }
+    }
+
+    .hacked-popup.closing {
+      opacity: 0 !important;
+      transform: scale(0.88) translateY(15px) !important;
+      pointer-events: none !important;
+    }
+
+    .hacked-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 77, 109, .3);
+      padding-bottom: 8px;
+      margin-bottom: 10px
+    }
+
+    .hacked-title {
+      font-size: 11px;
+      font-weight: 750;
+      letter-spacing: .06em;
+      color: #ff6b84;
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .hacked-blink {
+      animation: blink-fast .7s infinite alternate;
+      color: #ff4d6d
+    }
+
+    @keyframes blink-fast {
+      0% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: .2
+      }
+    }
+
+    .hacked-close {
+      background: rgba(255, 255, 255, .08);
+      border: 1px solid rgba(255, 77, 109, .4);
+      color: #ffccd5;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      line-height: 1;
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      display: grid;
+      place-items: center;
+      transition: all .2s;
+    }
+
+    .hacked-close:hover {
+      background: rgba(255, 77, 109, .4);
+      color: #fff;
+      border-color: #ff4d6d
+    }
+
+    .hacked-body {
+      font-size: 11px;
+      line-height: 1.5
+    }
+
+    .hacked-msg {
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 5px;
+      font-size: 12px;
+      letter-spacing: -.01em
+    }
+
+    .hacked-detail {
+      color: #cbd5e1;
+      font-size: 10px;
+      background: rgba(0, 0, 0, .45);
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 77, 109, .25);
+      margin-top: 6px;
+      font-family: "SFMono-Regular", Consolas, monospace
+    }
+
+    .hacked-detail code {
+      color: #93c5fd
+    }
+
+    .hacked-foot {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 12px
+    }
+
+    .hacked-hint {
+      font-size: 9px;
+      color: #f87171;
+      letter-spacing: .03em
+    }
+
+    .hacked-btn {
+      background: rgba(255, 77, 109, .2);
+      border: 1px solid #ff4d6d;
+      color: #ffccd5;
+      font-size: 11px;
+      font-weight: 650;
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .02em;
+    }
+
+    .hacked-btn:hover {
+      background: rgba(255, 77, 109, .45);
+      color: #fff;
+      box-shadow: 0 0 12px rgba(255, 77, 109, .5)
+    }
+
+    /* CINEMATIC EXECUTION LOG CARD (SCENE 6 - SCRIPT CLIMAX) */
+    .execution-log-card {
+      margin: 14px 0 8px;
+      background: linear-gradient(135deg, rgba(38, 12, 20, 0.98), rgba(20, 6, 11, 0.99));
+      border: 1.5px solid #ff4d6d;
+      border-radius: 9px;
+      padding: 16px 18px;
+      box-shadow: 0 0 35px rgba(255, 77, 109, 0.45), inset 0 0 15px rgba(255, 77, 109, 0.2);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      animation: popup-jolt 0.4s ease forwards;
+    }
+
+    .exec-log-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px dashed rgba(255, 77, 109, 0.4);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+      font-size: 10px;
+      color: #cbd5e1;
+    }
+
+    .exec-log-badge {
+      color: #ff6b84;
+      font-weight: 750;
+      letter-spacing: 0.1em;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .exec-log-title {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 0.1em;
+      color: #fff;
+      margin-bottom: 14px;
+      text-shadow: 0 0 12px rgba(255, 77, 109, 0.7);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .exec-log-grid {
+      display: grid;
+      grid-template-columns: 110px 1fr;
+      row-gap: 9px;
+      font-size: 12px;
+      line-height: 1.5;
+    }
+
+    .exec-key {
+      color: #94a3b8;
+      font-weight: 600;
+    }
+
+    .exec-val {
+      color: #e2e8f0;
+      font-weight: 550;
+    }
+
+    .exec-val.highlight-user {
+      color: #ff4d6d;
+      font-weight: 750;
+      font-size: 13px;
+      background: rgba(255, 77, 109, 0.2);
+      padding: 2px 7px;
+      border-radius: 4px;
+      width: fit-content;
+      border: 1px solid rgba(255, 77, 109, 0.4);
+    }
+
+    .exec-val.highlight-ip {
+      color: #f4b942;
+      font-weight: 700;
+    }
+
+    .exec-val.highlight-status {
+      color: #fff;
+      background: var(--red);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-weight: 750;
+      width: fit-content;
+      box-shadow: 0 0 10px rgba(255, 77, 109, 0.6);
+    }
+
+    .exec-log-footer {
+      margin-top: 14px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 77, 109, 0.25);
+      font-size: 11px;
+      color: #fca5a5;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    /* FLOATING SECOND TERMINAL (TERMINAL 2 - AUDIT INSPECTION) */
+    .floating-terminal-window {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.92);
+      width: 660px;
+      max-width: calc(100vw - 36px);
+      height: 440px;
+      max-height: calc(100vh - 60px);
+      background: linear-gradient(180deg, rgba(16, 23, 36, 0.98), rgba(9, 13, 22, 0.99));
+      border: 1.5px solid rgba(110, 168, 255, 0.45);
+      border-radius: 11px;
+      box-shadow: 0 28px 75px rgba(0, 0, 0, 0.85), 0 0 45px rgba(110, 168, 255, 0.22);
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .floating-terminal-window.open {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .floating-terminal-window.minimized {
+      transform: translate(calc(50vw - 230px), calc(50vh - 60px)) scale(0.5) !important;
+      opacity: 0.7;
+      height: 42px !important;
+      overflow: hidden;
+    }
+
+    .floating-terminal-window.maximized {
+      top: 20px !important;
+      left: 20px !important;
+      width: calc(100vw - 40px) !important;
+      height: calc(100vh - 40px) !important;
+      transform: none !important;
+    }
+
+    .ft-titlebar {
+      height: 38px;
+      background: linear-gradient(180deg, rgba(28, 40, 60, 0.95), rgba(18, 27, 42, 0.95));
+      border-bottom: 1px solid rgba(110, 168, 255, 0.25);
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      user-select: none;
+      cursor: move;
+    }
+
+    .ft-controls {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .ft-btn {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 0;
+      padding: 0;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      font-size: 8px;
+      color: transparent;
+      font-weight: 700;
+      line-height: 1;
+      transition: color 0.15s;
+    }
+
+    .ft-titlebar:hover .ft-btn {
+      color: rgba(0, 0, 0, 0.7);
+    }
+
+    .ft-btn-close {
+      background: #ff5f56;
+      border: 1px solid #e0443e;
+    }
+
+    .ft-btn-min {
+      background: #ffbd2e;
+      border: 1px solid #dea123;
+    }
+
+    .ft-btn-max {
+      background: #27c93f;
+      border: 1px solid #1aab29;
+    }
+
+    .ft-title {
+      font-size: 11px;
+      font-weight: 650;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      letter-spacing: 0.02em;
+      font-family: Inter, sans-serif;
+    }
+
+    .ft-session-status {
+      font-size: 9px;
+      font-weight: 700;
+      color: var(--blue);
+      background: rgba(110, 168, 255, 0.12);
+      border: 1px solid rgba(110, 168, 255, 0.3);
+      padding: 2px 7px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      letter-spacing: 0.05em;
+    }
+
+    .ft-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .ft-body {
+      flex: 1;
+      padding: 16px 18px;
+      overflow-y: auto;
+      font: 12px/1.8 "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      color: #cbd5e1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .ft-history {
+      flex: 1;
+    }
+
+    .ft-prompt-line {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .ft-prompt {
+      color: var(--blue);
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .ft-cmd-typed {
+      color: #fff;
+      font-weight: 550;
+    }
+
+    .ft-cursor {
+      display: inline-block;
+      width: 7px;
+      height: 14px;
+      background: var(--blue);
+      vertical-align: middle;
+      animation: blink 1s infinite;
+    }
+
+    @media(max-width:900px) {
+      .workspace {
+        grid-template-columns: minmax(0, 1.3fr) minmax(300px, .9fr)
+      }
+
+      .monitor {
+        padding: 15px
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .metric {
+        padding: 10px
+      }
+
+      .metric-value {
+        font-size: 21px
+      }
+    }
+
+    @media(max-width:680px) {
+      body {
+        overflow: auto
+      }
+
+      .app {
+        height: auto;
+        min-height: 100dvh;
+        grid-template-rows: 52px auto
+      }
+
+      .workspace {
+        grid-template-columns: 1fr
+      }
+
+      .monitor {
+        min-height: 690px
+      }
+
+      .chat {
+        min-height: 580px;
+        border-left: 0;
+        border-top: 1px solid var(--line)
+      }
+
+      .metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .topbar {
+        padding: 0 14px
+      }
+
+      .top-meta {
+        gap: 9px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app" id="app-root">
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark" id="brand-icon">⌁</span><span>PAYCORE</span><span
+          style="color:#64748b;font-weight:450;letter-spacing:.06em">/ OPERATIONS</span></div>
+
+      <div class="top-meta">
+        <span class="live"><i class="dot" id="live-dot"></i> <span id="live-text">Live monitoring</span></span>
+        <span id="env-badge">PRODUCTION</span>
+        <span id="clock">22:15:08</span>
+      </div>
+    </header>
+
+    <main class="workspace">
+      <section class="monitor">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Infrastructure / Overview</div>
+            <h1 id="page-title">Server monitoring</h1>
+            <div class="host" id="host-meta">Host: <strong>PAYCORE-01</strong> &nbsp;·&nbsp; OS: <strong>Linux</strong>
+              &nbsp;·&nbsp; Service: <strong style="color:var(--green)" id="service-status">Running</strong>
+              &nbsp;·&nbsp; Backup: <strong style="color:var(--amber)" id="backup-status">Pending</strong> &nbsp;·&nbsp;
+              Alerts: <strong style="color:var(--amber)" id="alerts-status">3 Active</strong></div>
+          </div>
+          <div class="health" id="health-badge"><i class="dot"></i> <span id="health-text">Degraded performance</span>
+          </div>
+        </div>
+
+        <!-- INCIDENT ALERT (SCENE 6) -->
+        <div class="incident-alert-banner" id="incident-banner">
+          <div class="incident-title-row">
+            <div class="incident-title"><span class="blink-dot"></span> INCIDENT ALERT #INC-9014</div>
+            <span class="incident-severity">SEVERITY 1 · CRITICAL ERROR</span>
+          </div>
+          <div class="incident-items">
+            <div class="incident-item">⚠ Payment processing service unavailable</div>
+            <div class="incident-item">⚠ Transaction queue errors detected</div>
+            <div class="incident-item">⚠ Multiple requests failed (3,000+ drops)</div>
+            <div class="incident-item">⚠ System rollback required</div>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <div class="metric-label">CPU utilization</div>
+            <div class="metric-value"><span id="val-cpu">68</span><small>%</small></div>
+            <div class="metric-foot"><span id="cpu-sub" class="amber">▲ 4.2%</span><span>vs. baseline</span></div>
+            <div class="mini-bar"><span id="cpu-bar" style="width:68%;background:var(--amber)"></span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Memory usage</div>
+            <div class="metric-value"><span id="val-mem">74</span><small>%</small></div>
+            <div class="metric-foot"><span id="mem-sub" class="amber">Elevated</span><span id="mem-detail">· 5.9 GB / 8
+                GB</span></div>
+            <div class="mini-bar"><span id="mem-bar" style="width:74%;background:var(--amber)"></span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Request rate</div>
+            <div class="metric-value"><span id="val-rps">1,284</span><small>/s</small></div>
+            <div class="metric-foot"><span id="rps-sub" class="red">▲ High volume</span><span>last 60 sec</span></div>
+            <div class="mini-bar"><span id="rps-bar" style="width:83%;background:var(--red)"></span></div>
+          </div>
+          <div class="metric">
+            <div class="metric-label">Payment latency</div>
+            <div class="metric-value"><span id="val-latency">842</span><small id="lat-unit">ms</small></div>
+            <div class="metric-foot"><span id="lat-sub" class="red">Above threshold</span><span>p95 response</span>
+            </div>
+            <div class="mini-bar"><span id="lat-bar" style="width:78%;background:var(--red)"></span></div>
+          </div>
+        </div>
+
+        <section class="panel terminal">
+          <div class="panel-head">
+            <span class="panel-title" id="term-title">System terminal <span
+                style="color:#63748b;font-weight:400">·</span> paycore-01</span>
+            <span class="panel-meta" id="term-meta"><span class="term-ok">●</span> SSH session active</span>
+          </div>
+          <div class="terminal-body" id="term-history">
+            <!-- Populated dynamically based on scene state -->
+          </div>
+          <div class="terminal-input-line">
+            <span class="prompt" id="term-prompt">root@paycore-01:~#</span>
+            <input id="term-input" class="terminal-input" type="text" autocomplete="off" spellcheck="false"
+              placeholder="" aria-label="Terminal command">
+          </div>
+        </section>
+      </section>
+
+      <aside class="chat">
+        <div class="chat-head">
+          <div class="chat-title-row">
+            <div class="chat-title">Client support</div>
+            <div class="secure" id="chat-security"><span>●</span> Encrypted session</div>
+          </div>
+          <div class="client-row">
+            <div class="avatar" id="client-avatar">PC</div>
+            <div class="client-info">
+              <div class="client-name">PayCore Client</div>
+              <div class="client-status" id="client-status">Support conversation · Active</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="chat-history" id="chat-history" aria-live="polite">
+          <!-- Chat bubbles populated dynamically -->
+        </div>
+
+        <div class="chat-composer">
+          <div class="composer-label"><span>Message</span><span id="chat-state">Encrypted</span></div>
+          <textarea id="chat-input" class="chat-textarea" placeholder="Type a message…"
+            aria-label="Chat message"></textarea>
+          <div class="composer-foot"><span>End-to-end encrypted</span><span><span class="keycap">ENTER</span>
+              Send</span></div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <!-- BOTTOM-LEFT DOWNLOAD SUCCESS MODAL -->
+  <div class="download-modal" id="download-modal">
+    <div class="dl-modal-header">
+      <div class="dl-badge-success"><span class="dl-check">✓</span> Download Complete</div>
+      <div class="dl-header-right">
+        <span class="dl-countdown-badge" id="dl-countdown">3s</span>
+        <button class="dl-close-btn" id="btn-close-dl" type="button" aria-label="Close modal">×</button>
+      </div>
+    </div>
+    <div class="dl-modal-content">
+      <div class="dl-file-icon">⚡</div>
+      <div class="dl-file-info">
+        <div class="dl-file-name">maintenance_update.sh</div>
+        <div class="dl-file-sub">48.2 KB · Shell Script · Ready</div>
+        <div class="dl-file-path">Saved to: <code>/home/jake/Downloads/</code></div>
+      </div>
+    </div>
+    <div class="dl-progress-track">
+      <div class="dl-progress-fill" id="dl-progress-fill"></div>
+    </div>
+  </div>
+
+  <!-- HACKED / CYBER BREACH POPUPS CONTAINER -->
+  <div class="hacked-popup-container" id="hacked-container"></div>
+
+  <!-- FLOATING SECOND TERMINAL (JAKE CHECKS THE LOGS) -->
+  <div class="floating-terminal-window" id="floating-term-modal" role="dialog"
+    aria-label="Terminal 2 - Audit Log Viewer">
+    <div class="ft-titlebar" id="ft-titlebar">
+      <div class="ft-controls">
+        <button class="ft-btn ft-btn-close" id="ft-btn-close" title="Close window (ESC)" aria-label="Close">✕</button>
+        <button class="ft-btn ft-btn-min" id="ft-btn-min" title="Minimize window" aria-label="Minimize">−</button>
+        <button class="ft-btn ft-btn-max" id="ft-btn-max" title="Maximize window" aria-label="Maximize">□</button>
+      </div>
+      <div class="ft-title">
+        <span>⌨ jake@workstation: ~/audit · bash (Terminal 2)</span>
+      </div>
+      <div class="ft-session-status">
+        <span class="ft-dot"></span> AUDIT SESSION
+      </div>
+    </div>
+    <div class="ft-body" id="ft-body">
+      <div class="ft-history" id="ft-history">
+        <!-- Output streams dynamically -->
+      </div>
+      <div class="ft-prompt-line" id="ft-prompt-line">
+        <span class="ft-prompt">jake@workstation:~$</span>
+        <span class="ft-cmd-typed" id="ft-cmd-typed"></span><span class="ft-cursor" id="ft-cursor">█</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // DOM References
+    const appRoot = document.getElementById('app-root');
+    const cpuEl = document.getElementById('val-cpu'), memEl = document.getElementById('val-mem'), rpsEl = document.getElementById('val-rps'), latEl = document.getElementById('val-latency');
+    const cpuBar = document.getElementById('cpu-bar'), memBar = document.getElementById('mem-bar'), rpsBar = document.getElementById('rps-bar'), latBar = document.getElementById('lat-bar');
+    const healthBadge = document.getElementById('health-badge'), healthText = document.getElementById('health-text');
+    const serviceStatus = document.getElementById('service-status'), alertsStatus = document.getElementById('alerts-status'), backupStatus = document.getElementById('backup-status');
+    const incidentBanner = document.getElementById('incident-banner');
+    const termInput = document.getElementById('term-input'), termHistory = document.getElementById('term-history');
+    const chatInput = document.getElementById('chat-input'), chatHistory = document.getElementById('chat-history');
+    const chatState = document.getElementById('chat-state');
+    const downloadModal = document.getElementById('download-modal'), btnCloseDl = document.getElementById('btn-close-dl');
+
+    // Scene state tracking
+    let currentScene = 4; // 4, 5, or 6
+    let fileDownloaded = false;
+    let clientConfirmedTested = false;
+    let replyPending = false;
+    let scriptRunning = false;
+    let meltdownActive = false;
+
+    // SCENE 4 DIALOGUE & TERMINAL COMMAND
+    const scene4Cmd = "check-logs --target=PAYCORE-01";
+    const scene4Chats = [
+      "Sir, may warning po sa server. Mataas yung requests and may delay sa payment service.",
+      "I will check the logs first. I also recommend checking the backup before making major changes.",
+      "Sir, may maintenance procedure po ba kayo for this?"
+    ];
+    const scene4Replies = [
+      "Can you fix it?",
+      "No need. Just restart the service. We need the system running immediately.",
+      "Just follow the instructions I sent. We don't have time."
+    ];
+    const scene4Times = ["10:14 PM", "10:15 PM", "10:17 PM"];
+    const scene4ReplyTimes = ["10:15 PM", "10:16 PM", "10:18 PM"];
+
+    // SCENE 5 DIALOGUE & TERMINAL COMMAND
+    const scene5BashCmd = "sudo bash ./maintenance_update.sh";
+    const scene5Chats = [
+      "Is this already tested po?"
+    ];
+    const scene5Replies = [
+      "Yes. All administrators use it. Just run it with administrator access."
+    ];
+    const scene5Times = ["10:24 PM"];
+    const scene5ReplyTimes = ["10:25 PM"];
+
+    // SCENE 6 DIALOGUE & LOG COMMAND
+    const scene6LogCmd = "cat /var/log/audit/execution.log";
+    const scene6Chats = [
+      "Sir, nagka-error po yung payment service after the maintenance task.",
+      "I followed the instructions po. The service started failing after the update.",
+      "I need access to the backup and recovery procedure po."
+    ];
+    const scene6Replies = [
+      "What did you do?",
+      "You were responsible for the maintenance. Fix it now.",
+      "There is no time for that. Just restore the system."
+    ];
+    const scene6Times = ["10:26 PM", "10:27 PM", "10:28 PM"];
+    const scene6ReplyTimes = ["10:26 PM", "10:27 PM", "10:28 PM"];
+
+    let scene4Step = 0, scene4CharIndex = 0, termCharIndex = 0;
+    let scene5Step = 0, scene5CharIndex = 0;
+    let scene6Step = 0, scene6CharIndex = 0;
+    let execLogAutoTimeout = null;
+    let ftCharIndex = 0, ftLogExecuted = false, execLogTriggered = false;
+
+    // Realtime clock
+    const pad = n => String(n).padStart(2, '0');
+    function timeNow() { const d = new Date(); return `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`; }
+    function updateClock() { document.getElementById('clock').textContent = timeNow(); }
+    updateClock(); setInterval(updateClock, 1000);
+
+    // Background subtle metrics drift
+    setInterval(() => {
+      if (meltdownActive) return;
+      const cpu = Math.max(65, Math.min(72, 68 + Math.floor(Math.random() * 5) - 2));
+      const mem = Math.max(72, Math.min(77, 74 + Math.floor(Math.random() * 5) - 2));
+      cpuEl.textContent = cpu; memEl.textContent = mem;
+      cpuBar.style.width = cpu + '%'; memBar.style.width = mem + '%';
+    }, 1800);
+
+    let dlTimerInterval = null;
+    let dlAutoCloseTimeout = null;
+
+    function showDownloadModal() {
+      if (dlTimerInterval) clearInterval(dlTimerInterval);
+      if (dlAutoCloseTimeout) clearTimeout(dlAutoCloseTimeout);
+
+      const badge = document.getElementById('dl-countdown');
+      const fill = document.getElementById('dl-progress-fill');
+
+      let secondsLeft = 3;
+      if (badge) badge.textContent = '3s';
+
+      if (fill) {
+        fill.style.transition = 'none';
+        fill.style.width = '100%';
+        void fill.offsetWidth; // Force repaint
+        fill.style.transition = 'width 3.5s linear';
+        fill.style.width = '0%';
+      }
+
+      downloadModal.classList.add('show');
+
+      dlTimerInterval = setInterval(() => {
+        secondsLeft--;
+        if (secondsLeft > 0) {
+          if (badge) badge.textContent = `${secondsLeft}s`;
+        } else {
+          if (badge) badge.textContent = '0s';
+          clearInterval(dlTimerInterval);
+        }
+      }, 1000);
+
+      dlAutoCloseTimeout = setTimeout(() => {
+        closeDownloadModal();
+      }, 3500);
+    }
+
+    function closeDownloadModal() {
+      if (dlTimerInterval) { clearInterval(dlTimerInterval); dlTimerInterval = null; }
+      if (dlAutoCloseTimeout) { clearTimeout(dlAutoCloseTimeout); dlAutoCloseTimeout = null; }
+      downloadModal.classList.remove('show');
+    }
+
+    if (btnCloseDl) {
+      btnCloseDl.addEventListener('click', closeDownloadModal);
+    }
+
+    function addTerm(text, kind = 'info', isRaw = false) {
+      const line = document.createElement('div'); line.className = 'term-line';
+      if (!isRaw) {
+        const stamp = document.createElement('span'); stamp.className = 'term-time'; stamp.textContent = timeNow();
+        line.appendChild(stamp);
+      }
+      const content = document.createElement('span');
+      if (kind === 'warning') content.className = 'term-warn';
+      else if (kind === 'error') content.className = 'term-error';
+      else if (kind === 'highlight-error') content.className = 'term-highlight-error';
+      else if (kind === 'ok') content.className = 'term-ok';
+      else content.className = 'term-info';
+      content.textContent = text;
+      line.appendChild(content);
+      termHistory.appendChild(line);
+      termHistory.scrollTop = termHistory.scrollHeight;
+    }
+
+    function addMessage(sender, text, kind, stamp) {
+      const wrap = document.createElement('div'); wrap.className = 'message ' + kind;
+      const meta = document.createElement('div'); meta.className = 'message-meta';
+      const who = document.createElement('span'); who.textContent = sender;
+      const when = document.createElement('span'); when.textContent = stamp || "10:24 PM";
+      meta.append(who, when);
+      const bubble = document.createElement('div'); bubble.className = 'bubble'; bubble.textContent = text;
+      wrap.append(meta, bubble);
+      chatHistory.appendChild(wrap);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function showTyping() {
+      const wrap = document.createElement('div'); wrap.className = 'message client'; wrap.id = 'typing-indicator';
+      const meta = document.createElement('div'); meta.className = 'message-meta'; meta.textContent = 'CLIENT · typing';
+      const bubble = document.createElement('div'); bubble.className = 'typing'; bubble.innerHTML = '<i></i><i></i><i></i>';
+      wrap.append(meta, bubble);
+      chatHistory.appendChild(wrap);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+    }
+
+    function downloadFile() {
+      if (fileDownloaded) return;
+      fileDownloaded = true;
+      const btn = document.getElementById('btn-download');
+      if (btn) {
+        btn.classList.remove('pulse');
+        btn.classList.add('downloaded');
+        btn.textContent = '✓ Downloaded to ~/Downloads/maintenance_update.sh';
+      }
+      showDownloadModal();
+      addTerm('[DOWNLOAD] Saved /home/jake/Downloads/maintenance_update.sh (48.2 KB)', 'info');
+      chatState.textContent = 'Encrypted';
+      termInput.disabled = false;
+      termInput.placeholder = '';
+    }
+
+    function handleDownloadClick() {
+      if (!clientConfirmedTested) {
+        chatInput.focus();
+        return;
+      }
+      downloadFile();
+      termInput.focus();
+    }
+
+    function updateNavPills() {
+      // Topbar scene buttons removed for authentic on-camera appearance
+    }
+
+    // ==========================================
+    // INITIALIZE SCENE 4
+    // ==========================================
+    function initScene4() {
+      currentScene = 4;
+      meltdownActive = false;
+      scriptRunning = false;
+      fileDownloaded = false;
+      clientConfirmedTested = false;
+      replyPending = false;
+      scene4Step = 0; scene4CharIndex = 0; termCharIndex = 0;
+      execLogTriggered = false;
+      ftCharIndex = 0;
+      ftLogExecuted = false;
+      if (execLogAutoTimeout) { clearTimeout(execLogAutoTimeout); execLogAutoTimeout = null; }
+      updateNavPills();
+      closeAllHackedPopups();
+
+      appRoot.classList.remove('meltdown', 'screen-flicker');
+      incidentBanner.classList.remove('show');
+
+      // Reset Topbar & Health
+      document.getElementById('live-dot').style.background = 'var(--green)';
+      document.getElementById('live-dot').style.boxShadow = '0 0 10px rgba(61,220,151,.7)';
+      document.getElementById('live-text').textContent = 'Live monitoring';
+      document.getElementById('live-text').style.color = '#b9c7d8';
+      document.getElementById('env-badge').textContent = 'PRODUCTION';
+      document.getElementById('env-badge').style.color = 'var(--muted)';
+
+      healthBadge.innerHTML = '<i class="dot"></i> <span id="health-text">Degraded performance</span>';
+      healthBadge.style.color = 'var(--amber)';
+      healthBadge.style.borderColor = 'rgba(244,185,66,.25)';
+      healthBadge.style.background = 'rgba(244,185,66,.07)';
+
+      serviceStatus.textContent = 'Running'; serviceStatus.style.color = 'var(--green)';
+      backupStatus.textContent = 'Pending'; backupStatus.style.color = 'var(--amber)';
+      alertsStatus.textContent = '3 Active'; alertsStatus.style.color = 'var(--amber)';
+
+      // Reset Metrics
+      cpuEl.textContent = '68'; cpuEl.style.color = '';
+      cpuBar.style.width = '68%'; cpuBar.style.background = 'var(--amber)';
+      document.getElementById('cpu-sub').textContent = '▲ 4.2%';
+      document.getElementById('cpu-sub').className = 'amber';
+
+      memEl.textContent = '74'; memEl.style.color = '';
+      memBar.style.width = '74%'; memBar.style.background = 'var(--amber)';
+      document.getElementById('mem-sub').textContent = 'Elevated';
+      document.getElementById('mem-sub').className = 'amber';
+      document.getElementById('mem-detail').textContent = '· 5.9 GB / 8 GB';
+
+      rpsEl.textContent = '1,284'; rpsEl.style.color = '';
+      rpsBar.style.width = '83%';
+      document.getElementById('rps-sub').textContent = '▲ High volume';
+
+      latEl.textContent = '842'; latEl.style.color = '';
+      document.getElementById('lat-unit').textContent = 'ms';
+      latBar.style.width = '78%';
+      document.getElementById('lat-sub').textContent = 'Above threshold';
+
+      // Terminal Initial Logs for Scene 4
+      termInput.disabled = false;
+      termInput.value = '';
+      termInput.placeholder = '';
+      termHistory.innerHTML = `
+      <div class="term-line"><span class="term-time">22:14:02</span><span class="term-ok">[ OK ]</span> Started System Logging Service.</div>
+      <div class="term-line"><span class="term-time">22:14:03</span><span class="term-ok">[ OK ]</span> Reached target System Initialization.</div>
+      <div class="term-line"><span class="term-time">22:14:03</span><span class="term-ok">[ OK ]</span> Started Network Time Synchronization.</div>
+      <div class="term-line"><span class="term-time">22:14:04</span><span class="term-ok">[ OK ]</span> Started OpenSSH server.</div>
+      <div class="term-line"><span class="term-time">22:14:05</span><span class="term-info">[INFO]</span> Payment processing daemon initialized.</div>
+      <div class="term-line"><span class="term-time">22:14:06</span><span class="term-info">[INFO]</span> Monitoring agent connected.</div>
+      <div class="term-line"><span class="term-time">22:14:09</span><span class="term-warn">[WARN]</span> Warning: High request volume (1,284 req/s > 900 threshold)</div>
+      <div class="term-line"><span class="term-time">22:14:11</span><span class="term-warn">[WARN]</span> Warning: Service response delay (p95: 842ms)</div>
+      <div class="term-line"><span class="term-time">22:14:13</span><span class="term-error">[ERROR]</span> Backup: Not completed (scheduled backup pending)</div>
+      <div class="term-line"><span class="term-time">22:14:14</span><span class="term-info">[INFO]</span> System ready. Awaiting operator command.</div>
+    `;
+
+      // Chat Initial Setup for Scene 4
+      chatInput.disabled = false;
+      chatInput.value = '';
+      chatInput.placeholder = 'Type a message…';
+      chatState.textContent = 'Encrypted';
+      chatState.style.color = '';
+      document.getElementById('client-status').textContent = 'Support conversation · Active';
+      document.getElementById('client-status').style.color = 'var(--muted)';
+
+      chatHistory.innerHTML = `
+      <div class="day-divider">Earlier today</div>
+      <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>9:42 PM</span></div><div class="bubble">Good evening. The payment portal was working normally earlier.</div></div>
+      <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>9:44 PM</span></div><div class="bubble">Thanks for letting me know. I'll keep an eye on the server and let you know if anything unusual comes up.</div></div>
+      <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:12 PM</span></div><div class="bubble">We're starting to notice some delays when processing payments.</div></div>
+    `;
+      termInput.focus();
+    }
+
+    // ==========================================
+    // INITIALIZE SCENE 5
+    // ==========================================
+    function initScene5(fromScene4End = false) {
+      currentScene = 5;
+      meltdownActive = false;
+      scriptRunning = false;
+      fileDownloaded = false;
+      clientConfirmedTested = false;
+      replyPending = false;
+      scene5Step = 0; scene5CharIndex = 0; termCharIndex = 0;
+      execLogTriggered = false;
+      ftCharIndex = 0;
+      ftLogExecuted = false;
+      if (execLogAutoTimeout) { clearTimeout(execLogAutoTimeout); execLogAutoTimeout = null; }
+      updateNavPills();
+      closeAllHackedPopups();
+
+      appRoot.classList.remove('meltdown', 'screen-flicker');
+      incidentBanner.classList.remove('show');
+
+      // Terminal in Scene 5
+      termInput.disabled = false;
+      termInput.value = '';
+      termInput.placeholder = '';
+      if (!fromScene4End) {
+        termHistory.innerHTML = `
+        <div class="term-line"><span class="term-time">22:20:10</span><span class="term-ok">[ OK ]</span> System state stabilized. Awaiting maintenance instructions.</div>
+        <div class="term-line"><span class="term-time">22:21:05</span><span class="term-warn">[WARN]</span> Warning: High request volume (1,284 req/s > 900 threshold)</div>
+        <div class="term-line"><span class="term-time">22:21:12</span><span class="term-warn">[WARN]</span> Warning: Service response delay (p95: 842ms)</div>
+        <div class="term-line"><span class="term-time">22:21:18</span><span class="term-error">[ERROR]</span> Backup: Not completed (scheduled backup pending)</div>
+        <div class="term-line"><span class="term-time">22:22:00</span><span class="term-info">[INFO]</span> Ready for maintenance script execution.</div>
+      `;
+
+        chatHistory.innerHTML = `
+        <div class="day-divider">Earlier today</div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>9:42 PM</span></div><div class="bubble">Good evening. The payment portal was working normally earlier.</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>9:44 PM</span></div><div class="bubble">Thanks for letting me know. I'll keep an eye on the server and let you know if anything unusual comes up.</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:12 PM</span></div><div class="bubble">We're starting to notice some delays when processing payments.</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>10:14 PM</span></div><div class="bubble">Sir, may warning po sa server. Mataas yung requests and may delay sa payment service.</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:15 PM</span></div><div class="bubble">Can you fix it?</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>10:15 PM</span></div><div class="bubble">I will check the logs first. I also recommend checking the backup before making major changes.</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:16 PM</span></div><div class="bubble">No need. Just restart the service. We need the system running immediately.</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>10:17 PM</span></div><div class="bubble">Sir, may maintenance procedure po ba kayo for this?</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:18 PM</span></div><div class="bubble">Just follow the instructions I sent. We don't have time.</div></div>
+      `;
+      }
+
+      // Append Scene 5 opening message WITH the attached file card
+      const clientMsgWrap = document.createElement('div');
+      clientMsgWrap.className = 'message client';
+      clientMsgWrap.innerHTML = `
+      <div class="message-meta"><span>CLIENT</span><span>10:24 PM</span></div>
+      <div class="bubble">Download this maintenance tool. It will automatically clean the system cache and improve performance.</div>
+      <div class="file-card" id="file-card-box">
+        <div class="file-card-top">
+          <div class="file-icon">⚡</div>
+          <div>
+            <div class="file-meta-name">maintenance_update.sh</div>
+            <div class="file-meta-sub">Shell Script · 48.2 KB</div>
+          </div>
+        </div>
+        <div class="file-perm-badge">⚠ Requested permission: Administrator (sudo)</div>
+        <button class="file-download-btn" id="btn-download" type="button">⬇ Download maintenance_update.sh</button>
+      </div>
+    `;
+      chatHistory.appendChild(clientMsgWrap);
+      chatHistory.scrollTop = chatHistory.scrollHeight;
+
+      document.getElementById('btn-download').addEventListener('click', handleDownloadClick);
+
+      chatInput.disabled = false;
+      chatInput.value = '';
+      chatInput.placeholder = 'Type a message…';
+      chatState.textContent = 'Encrypted';
+      chatState.style.color = '';
+      chatInput.focus();
+    }
+
+    // ==========================================
+    // INITIALIZE SCENE 6 (THE SYSTEM FAILURE)
+    // ==========================================
+    function initScene6(fromScene5End = false) {
+      currentScene = 6;
+      scriptRunning = false;
+      replyPending = false;
+      scene6Step = 0; scene6CharIndex = 0; termCharIndex = 0;
+      execLogTriggered = false;
+      ftCharIndex = 0;
+      ftLogExecuted = false;
+      if (execLogAutoTimeout) { clearTimeout(execLogAutoTimeout); execLogAutoTimeout = null; }
+      updateNavPills();
+      closeAllHackedPopups();
+
+      // Trigger visual meltdown & incident alert
+      triggerMeltdown();
+      incidentBanner.classList.add('show');
+
+      // Trigger screen flicker/glitch effect
+      appRoot.classList.add('screen-flicker');
+      setTimeout(() => appRoot.classList.remove('screen-flicker'), 1500);
+
+      // Terminal 1 in Scene 6: Server PAYCORE-01 is crashed and halted
+      termInput.disabled = true;
+      termInput.value = '';
+      termInput.placeholder = 'System halted. Local console offline.';
+      if (!fromScene5End) {
+        termHistory.innerHTML = `
+        <div class="term-line"><span class="term-time">22:25:31</span><span class="term-warn">[WARN]</span> Injected daemon PID 9184 active.</div>
+        <div class="term-line"><span class="term-time">22:25:38</span><span class="term-error">[ERROR]</span> Transaction queue unavailable (503 Service Unavailable)</div>
+        <div class="term-line"><span class="term-time">22:25:44</span><span class="term-error">[CRITICAL]</span> SIGSEGV in libpaycore.so · Core dumped</div>
+        <div class="term-line"><span class="term-time">22:26:00</span><span class="term-highlight-error">FATAL: SYSTEM HALTED. AUDIT TRAIL LOGGED.</span></div>
+      `;
+
+        chatHistory.innerHTML = `
+        <div class="day-divider">Earlier today</div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>9:42 PM</span></div><div class="bubble">Good evening. The payment portal was working normally earlier.</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>9:44 PM</span></div><div class="bubble">Thanks for letting me know. I'll keep an eye on the server and let you know if anything unusual comes up.</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:12 PM</span></div><div class="bubble">We're starting to notice some delays when processing payments.</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>10:14 PM</span></div><div class="bubble">Sir, may warning po sa server. Mataas yung requests and may delay sa payment service.</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:15 PM</span></div><div class="bubble">Can you fix it?</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>10:15 PM</span></div><div class="bubble">I will check the logs first. I also recommend checking the backup before making major changes.</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:16 PM</span></div><div class="bubble">No need. Just restart the service. We need the system running immediately.</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>10:17 PM</span></div><div class="bubble">Sir, may maintenance procedure po ba kayo for this?</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:18 PM</span></div><div class="bubble">Just follow the instructions I sent. We don't have time.</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:24 PM</span></div><div class="bubble">Download this maintenance tool. It will automatically clean the system cache and improve performance.</div></div>
+        <div class="message jake recent"><div class="message-meta"><span>JAKE</span><span>10:24 PM</span></div><div class="bubble">Is this already tested po?</div></div>
+        <div class="message client recent"><div class="message-meta"><span>CLIENT</span><span>10:25 PM</span></div><div class="bubble">Yes. All administrators use it. Just run it with administrator access.</div></div>
+      `;
+      }
+
+      chatInput.disabled = false;
+      chatInput.value = '';
+      chatInput.placeholder = 'Type a message…';
+      chatState.textContent = 'Disconnected';
+      chatState.style.color = 'var(--red)';
+      chatInput.focus();
+    }
+
+    // ==========================================
+    // CHAT INPUT TYPING SIMULATION
+    // ==========================================
+    chatInput.addEventListener('keydown', e => {
+      if (replyPending) { e.preventDefault(); return; }
+
+      if (currentScene === 4) {
+        if (scene4Step >= scene4Chats.length) { e.preventDefault(); return; }
+        const target = scene4Chats[scene4Step];
+        if (e.key === 'Enter') { e.preventDefault(); if (scene4CharIndex > 0 && !e.shiftKey) sendScene4Chat(); return; }
+        if (e.key === 'Tab') { e.preventDefault(); scene4CharIndex = target.length; chatInput.value = target; return; }
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          if (scene4CharIndex > 0) { scene4CharIndex--; chatInput.value = target.slice(0, scene4CharIndex); }
+          return;
+        }
+        if (e.key.length === 1) {
+          e.preventDefault();
+          if (scene4CharIndex < target.length) { scene4CharIndex++; chatInput.value = target.slice(0, scene4CharIndex); }
+        }
+      } else if (currentScene === 5) {
+        if (scene5Step >= scene5Chats.length) { e.preventDefault(); return; }
+        const target = scene5Chats[scene5Step];
+        if (e.key === 'Enter') { e.preventDefault(); if (scene5CharIndex > 0 && !e.shiftKey) sendScene5Chat(); return; }
+        if (e.key === 'Tab') { e.preventDefault(); scene5CharIndex = target.length; chatInput.value = target; return; }
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          if (scene5CharIndex > 0) { scene5CharIndex--; chatInput.value = target.slice(0, scene5CharIndex); }
+          return;
+        }
+        if (e.key.length === 1) {
+          e.preventDefault();
+          if (scene5CharIndex < target.length) { scene5CharIndex++; chatInput.value = target.slice(0, scene5CharIndex); }
+        }
+      } else if (currentScene === 6) {
+        if (scene6Step >= scene6Chats.length) { e.preventDefault(); return; }
+        const target = scene6Chats[scene6Step];
+        if (e.key === 'Enter') { e.preventDefault(); if (scene6CharIndex > 0 && !e.shiftKey) sendScene6Chat(); return; }
+        if (e.key === 'Tab') { e.preventDefault(); scene6CharIndex = target.length; chatInput.value = target; return; }
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          if (scene6CharIndex > 0) { scene6CharIndex--; chatInput.value = target.slice(0, scene6CharIndex); }
+          return;
+        }
+        if (e.key.length === 1) {
+          e.preventDefault();
+          if (scene6CharIndex < target.length) { scene6CharIndex++; chatInput.value = target.slice(0, scene6CharIndex); }
+        }
+      }
+    });
+
+    function sendScene4Chat() {
+      const text = scene4Chats[scene4Step];
+      const timeStamp = scene4Times[scene4Step] || "10:17 PM";
+      addMessage('JAKE', text, 'jake', timeStamp);
+      chatInput.value = ''; scene4CharIndex = 0;
+      const replyText = scene4Replies[scene4Step];
+      const replyStamp = scene4ReplyTimes[scene4Step] || "10:18 PM";
+      scene4Step++;
+
+      if (replyText) {
+        replyPending = true;
+        chatInput.disabled = true;
+        chatState.textContent = 'Client is typing…';
+        setTimeout(showTyping, 700);
+        setTimeout(() => {
+          const ind = document.getElementById('typing-indicator'); if (ind) ind.remove();
+          addMessage('CLIENT', replyText, 'client', replyStamp);
+          replyPending = false;
+          if (scene4Step < scene4Chats.length) {
+            chatInput.disabled = false;
+            chatState.textContent = 'Encrypted';
+            chatInput.focus();
+          } else {
+            // Finished Scene 4 - smoothly transition to Scene 5
+            chatInput.disabled = true;
+            chatState.textContent = 'Encrypted';
+            setTimeout(() => initScene5(true), 1800);
+          }
+        }, 1900);
+      }
+    }
+
+    function sendScene5Chat() {
+      const text = scene5Chats[scene5Step];
+      const timeStamp = scene5Times[scene5Step] || "10:24 PM";
+      addMessage('JAKE', text, 'jake', timeStamp);
+      chatInput.value = ''; scene5CharIndex = 0;
+      const replyText = scene5Replies[scene5Step];
+      const replyStamp = scene5ReplyTimes[scene5Step] || "10:25 PM";
+      scene5Step++;
+
+      if (replyText) {
+        replyPending = true;
+        chatInput.disabled = true;
+        chatState.textContent = 'Client is typing…';
+        setTimeout(showTyping, 700);
+        setTimeout(() => {
+          const ind = document.getElementById('typing-indicator'); if (ind) ind.remove();
+
+          addMessage('CLIENT', replyText, 'client', replyStamp);
+          clientConfirmedTested = true;
+
+          const btn = document.getElementById('btn-download');
+          if (btn && !fileDownloaded) {
+            btn.classList.add('pulse');
+          }
+
+          replyPending = false;
+          chatInput.disabled = true;
+          chatState.textContent = 'Encrypted';
+        }, 1900);
+      }
+    }
+
+    function sendScene6Chat() {
+      const text = scene6Chats[scene6Step];
+      const timeStamp = scene6Times[scene6Step] || "10:26 PM";
+      addMessage('JAKE', text, 'jake', timeStamp);
+      chatInput.value = ''; scene6CharIndex = 0;
+      const replyText = scene6Replies[scene6Step];
+      const replyStamp = scene6ReplyTimes[scene6Step] || "10:26 PM";
+      scene6Step++;
+
+      if (replyText) {
+        replyPending = true;
+        chatInput.disabled = true;
+        chatState.textContent = 'Client is typing…';
+        setTimeout(showTyping, 700);
+        setTimeout(() => {
+          const ind = document.getElementById('typing-indicator'); if (ind) ind.remove();
+          addMessage('CLIENT', replyText, 'client', replyStamp);
+          replyPending = false;
+          if (scene6Step < scene6Chats.length) {
+            chatInput.disabled = false;
+            chatState.textContent = 'Disconnected';
+            chatInput.focus();
+          } else {
+            // Finished Scene 6 chat:
+            // Jake received the final client message: "There is no time for that. Just restore the system."
+            // Waits for actor to press 1 to open Terminal 2
+            chatInput.disabled = true;
+            chatState.textContent = 'Disconnected';
+            stopContinuousErrors();
+          }
+        }, 1900);
+      }
+    }
+
+    // ==========================================
+    // TERMINAL INPUT TYPING SIMULATION
+    // ==========================================
+    termInput.addEventListener('keydown', e => {
+      if (scriptRunning) return;
+
+      if (currentScene === 4) {
+        if (e.key === 'Enter') { e.preventDefault(); if (termCharIndex > 0 || termInput.value.length > 0) runScene4Command(); return; }
+        if (e.key === 'Tab') { e.preventDefault(); termCharIndex = scene4Cmd.length; termInput.value = scene4Cmd; return; }
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          if (termCharIndex > 0) { termCharIndex--; termInput.value = scene4Cmd.slice(0, termCharIndex); }
+          return;
+        }
+        if (e.key.length === 1) {
+          e.preventDefault();
+          if (termCharIndex < scene4Cmd.length) { termCharIndex++; termInput.value = scene4Cmd.slice(0, termCharIndex); }
+        }
+      } else if (currentScene === 5) {
+        if (!fileDownloaded && e.key !== 'Escape') {
+          downloadFile();
+        }
+        if (e.key === 'Enter') { e.preventDefault(); if (termCharIndex > 0 || termInput.value.length > 0) runScene5Command(); return; }
+        if (e.key === 'Tab') { e.preventDefault(); termCharIndex = scene5BashCmd.length; termInput.value = scene5BashCmd; return; }
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          if (termCharIndex > 0) { termCharIndex--; termInput.value = scene5BashCmd.slice(0, termCharIndex); }
+          return;
+        }
+        if (e.key.length === 1) {
+          e.preventDefault();
+          if (termCharIndex < scene5BashCmd.length) { termCharIndex++; termInput.value = scene5BashCmd.slice(0, termCharIndex); }
+        }
+      } else if (currentScene === 6) {
+        e.preventDefault();
+        return;
+      }
+    });
+
+    function runScene4Command() {
+      const line = document.createElement('div'); line.className = 'term-line';
+      const stamp = document.createElement('span'); stamp.className = 'term-time'; stamp.textContent = timeNow();
+      const prompt = document.createElement('span'); prompt.className = 'term-ok'; prompt.textContent = 'root@paycore-01:~# ';
+      const cmd = document.createElement('span'); cmd.textContent = scene4Cmd;
+      line.append(stamp, prompt, cmd); termHistory.appendChild(line);
+      termInput.value = ''; termCharIndex = 0; termInput.disabled = true;
+
+      setTimeout(() => addTerm('Reading system status and service logs [PAYCORE-01]…'), 300);
+      setTimeout(() => addTerm('[SYSTEM LOG] Warning: High request volume (1,284 req/s > 900 threshold)', 'warning'), 750);
+      setTimeout(() => addTerm('[SYSTEM LOG] Warning: Service response delay (p95: 842ms)', 'warning'), 1200);
+      setTimeout(() => addTerm('[SYSTEM LOG] Backup: Not completed (scheduled backup pending)', 'error'), 1650);
+      setTimeout(() => {
+        addTerm('Log scan complete. 3 alerts flagged. System operational.');
+        termInput.disabled = false;
+        termInput.focus();
+      }, 2100);
+    }
+
+    // Exact Visual Sequence requested in the script for Scene 5
+    let continuousErrorInterval = null;
+
+    function stopContinuousErrors() {
+      if (continuousErrorInterval) {
+        clearInterval(continuousErrorInterval);
+        continuousErrorInterval = null;
+      }
+    }
+
+    // Exact Visual Sequence requested in the script for Scene 5
+    function runScene5Command() {
+      if (scriptRunning) return;
+      scriptRunning = true;
+      termInput.disabled = true;
+      termInput.value = ''; termCharIndex = 0;
+
+      const line = document.createElement('div'); line.className = 'term-line';
+      const stamp = document.createElement('span'); stamp.className = 'term-time'; stamp.textContent = timeNow();
+      const prompt = document.createElement('span'); prompt.className = 'term-ok'; prompt.textContent = 'root@paycore-01:~# ';
+      const cmd = document.createElement('span'); cmd.textContent = scene5BashCmd;
+      line.append(stamp, prompt, cmd); termHistory.appendChild(line);
+
+      // EXACT SEQUENCE FROM SCRIPT:
+      // The screen shows…
+      // MAINTENANCE IN PROGRESS…
+      // Checking services…
+      // Updating configuration…
+      // Restarting payment service…
+      // ERROR: Transaction queue unavailable
+      setTimeout(() => addTerm('MAINTENANCE IN PROGRESS…', 'info'), 500);
+      setTimeout(() => addTerm('Checking services…', 'info'), 1100);
+      setTimeout(() => addTerm('Updating configuration…', 'info'), 1700);
+      setTimeout(() => addTerm('Restarting payment service…', 'warning'), 2300);
+
+      setTimeout(() => {
+        addTerm('ERROR: Transaction queue unavailable', 'highlight-error');
+        addTerm('[CRITICAL] PAYMENT SERVICE UNRESPONSIVE · SYSTEM DOWN', 'error');
+
+        // Pause "after for a bit" (1.4s) for Jake's spoken reaction:
+        // JAKE: “Wait lang… bakit nag-error?” (Spoken out loud, not in chat)
+        setTimeout(() => {
+          // Trigger visual screen flicker/glitch effect
+          appRoot.classList.add('screen-flicker');
+          setTimeout(() => appRoot.classList.remove('screen-flicker'), 1400);
+
+          // Turn dashboard to RED meltdown
+          triggerMeltdown();
+          incidentBanner.classList.add('show');
+
+          // Rapid continuous stream of spicy cyber breach errors in terminal
+          streamContinuousErrors();
+
+          // Launch hacked cyber breach popups (staggered & dismissible)
+          showHackedPopups();
+
+          scriptRunning = false;
+          currentScene = 6;
+          scene6Step = 0; scene6CharIndex = 0;
+          termInput.disabled = true;
+          termInput.value = '';
+          termInput.placeholder = 'System halted. Local console offline.';
+
+          // Transition chat to Scene 6:
+          // Jake messages the client:
+          // "Sir, nagka-error po yung payment service after the maintenance task."
+          chatInput.disabled = false;
+          chatInput.value = '';
+          chatInput.placeholder = 'Type a message…';
+          chatState.textContent = 'Disconnected';
+          chatState.style.color = 'var(--red)';
+          chatInput.focus();
+        }, 1400);
+
+      }, 3000);
+    }
+
+    function streamContinuousErrors() {
+      stopContinuousErrors();
+
+      const initialRapidErrors = [
+        { text: '[CRITICAL] SIGSEGV in libpaycore.so · Core dumped (SIGSEGV 11)', kind: 'error', delay: 150 },
+        { text: '[SECURITY] Injected binary spawned: /tmp/.hidden_kswapd (UID 0 / ROOT)', kind: 'warning', delay: 350 },
+        { text: '[ALERT] Dynamic link hook installed: /lib/x86_64-linux-gnu/libcrypto.so.3 patched', kind: 'highlight-error', delay: 550 },
+        { text: '[ERROR] Database connection pool exhausted: 0/500 active threads', kind: 'error', delay: 750 },
+        { text: '[CRITICAL] Root privilege escalation verified - foreign PID 9184 granted UID 0', kind: 'error', delay: 950 },
+        { text: '[ALERT] Payment ledger checksum mismatch! (Expected 0x9f3b, Got 0x0000)', kind: 'highlight-error', delay: 1150 },
+        { text: '[CRITICAL] 3,420 incoming customer transaction requests dropped (HTTP 503)', kind: 'highlight-error', delay: 1350 },
+        { text: '[SECURITY] Remote socket opened: 185.220.101.5:4444 (ESTABLISHED)', kind: 'warning', delay: 1550 },
+        { text: '[FATAL] /etc/shadow read & modified by external process 9184', kind: 'error', delay: 1750 },
+        { text: '[SECURITY] Outbound encrypted payload: /var/data/ledger_vault.db (14.8 MB exfiltrated)', kind: 'highlight-error', delay: 1950 },
+        { text: '[EMERGENCY] SYSTEM SHUTDOWN ABORTED BY FOREIGN KERNEL HOOK', kind: 'highlight-error', delay: 2150 },
+        { text: '[CRITICAL] System integrity failure: IO buffer overflow in libpaycore.so', kind: 'error', delay: 2350 },
+        { text: 'FATAL: SYSTEM HALTED. AUDIT TRAIL LOGGED TO /var/log/audit/execution.log', kind: 'highlight-error', delay: 2550 }
+      ];
+
+      initialRapidErrors.forEach(item => {
+        setTimeout(() => {
+          if (currentScene === 6 || meltdownActive) {
+            addTerm(item.text, item.kind);
+          }
+        }, item.delay);
+      });
+
+      // Ongoing continuous stream of live random errors in terminal
+      const ongoingMeltdownLogs = [
+        { text: '[SECURITY] Reverse shell heartbeat active: PID 9184 -> 185.220.101.5:4444', kind: 'warning' },
+        { text: '[ERROR] Gateway timeout (HTTP 504): payment-broker-prod failed healthcheck', kind: 'error' },
+        { text: '[CRITICAL] Dropping unroutable payment packet #4289 (amount: ₱4,500.00)', kind: 'highlight-error' },
+        { text: '[ALERT] Cryptographic keystore decrypt error: HMAC verification failed', kind: 'error' },
+        { text: '[SECURITY] Unauthorized cron task injected: /etc/cron.d/.update_sync', kind: 'warning' },
+        { text: '[FATAL] Kernel memory violation at 0x7fff89ab20: segment destroyed', kind: 'error' },
+        { text: '[CRITICAL] 128 new checkout requests failed · Transaction service unreachable', kind: 'highlight-error' },
+        { text: '[WARN] Watchdog timeout: paycore-worker-02 unresponsive for 30s', kind: 'warning' }
+      ];
+
+      let logIndex = 0;
+      continuousErrorInterval = setInterval(() => {
+        if (!meltdownActive && currentScene !== 6) {
+          stopContinuousErrors();
+          return;
+        }
+        const item = ongoingMeltdownLogs[logIndex % ongoingMeltdownLogs.length];
+        logIndex++;
+        addTerm(item.text, item.kind);
+      }, 1800);
+    }
+
+    function showHackedPopups() {
+      const container = document.getElementById('hacked-container');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const popups = [
+        {
+          id: 'hacked-p1',
+          style: 'top:16%;right:23%',
+          delay: 500,
+          badge: 'SECURITY VIOLATION · PID 9184',
+          title: 'UNAUTHORIZED ROOT ESCALATION DETECTED',
+          detail: 'Process: <code>/tmp/.hidden_kswapd</code><br>Privilege: <span style="color:#ff6b84;font-weight:700">UID 0 (Root)</span> granted without sudoers rule.<br>Target: Injected into <code>libcrypto.so.3</code>',
+          btnText: 'Dismiss Alert [ESC]'
+        },
+        {
+          id: 'hacked-p2',
+          style: 'top:38%;left:20%',
+          delay: 1300,
+          badge: 'CRITICAL SERVICE COLLAPSE · HTTP 503',
+          title: 'PAYMENT GATEWAY COMPROMISED',
+          detail: 'Transaction Queue: <strong>UNAVAILABLE (HTTP 503)</strong><br>Failed Requests: <span style="color:#ff6b84;font-weight:700">3,420 orders dropped</span><br>Database pool: <code>0/500 active threads</code>',
+          btnText: 'Close Warning'
+        },
+        {
+          id: 'hacked-p3',
+          style: 'top:58%;left:32%',
+          delay: 2100,
+          badge: 'SYSTEM INTEGRITY PANIC #INC-9014',
+          title: 'REMOTE ACCESS BREACH VERIFIED',
+          detail: 'Remote socket: <code>185.220.101.5:4444</code> (ESTABLISHED)<br>Data Exfiltration: <code>/var/data/ledger_vault.db</code><br>Action: <span style="color:#f4b942">System rollback required immediately.</span>',
+          btnText: 'Acknowledge & Close'
+        }
+      ];
+
+      popups.forEach(p => {
+        setTimeout(() => {
+          if (!meltdownActive && currentScene !== 6) return;
+          const el = document.createElement('div');
+          el.className = 'hacked-popup';
+          el.id = p.id;
+          el.setAttribute('style', p.style);
+          el.innerHTML = `
+          <div class="hacked-head">
+            <span class="hacked-title"><span class="hacked-blink">⚠</span> ${p.badge}</span>
+            <button class="hacked-close" type="button" aria-label="Close" onclick="closeHackedPopup('${p.id}')">×</button>
+          </div>
+          <div class="hacked-body">
+            <div class="hacked-msg">${p.title}</div>
+            <div class="hacked-detail">${p.detail}</div>
+          </div>
+          <div class="hacked-foot">
+            <span class="hacked-hint">Press ESC to dismiss</span>
+            <button class="hacked-btn" type="button" onclick="closeHackedPopup('${p.id}')">${p.btnText}</button>
+          </div>
+        `;
+          container.appendChild(el);
+        }, p.delay);
+      });
+    }
+
+    function closeHackedPopup(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.classList.add('closing');
+        setTimeout(() => el.remove(), 250);
+      }
+    }
+
+    // FLOATING SECOND TERMINAL CONTROLS
+    const ftWindow = document.getElementById('floating-term-modal');
+    const ftTitlebar = document.getElementById('ft-titlebar');
+    const ftCmdTyped = document.getElementById('ft-cmd-typed');
+    const ftHistory = document.getElementById('ft-history');
+    const ftCursor = document.getElementById('ft-cursor');
+    const ftBtnClose = document.getElementById('ft-btn-close');
+    const ftBtnMin = document.getElementById('ft-btn-min');
+    const ftBtnMax = document.getElementById('ft-btn-max');
+
+    function openFloatingTerminal() {
+      if (!ftWindow) return;
+      ftWindow.classList.remove('minimized');
+      ftWindow.classList.add('open');
+      ftWindow.style.transform = 'translate(-50%, -50%) scale(1)';
+      ftWindow.style.top = '50%';
+      ftWindow.style.left = '50%';
+    }
+
+    function closeFloatingTerminal() {
+      if (ftWindow) ftWindow.classList.remove('open', 'minimized', 'maximized');
+    }
+
+    function toggleFloatingTerminal() {
+      if (!ftWindow) return;
+      if (ftWindow.classList.contains('open')) closeFloatingTerminal();
+      else runScene6ExecutionLog();
+    }
+
+    if (ftBtnClose) ftBtnClose.addEventListener('click', closeFloatingTerminal);
+    if (ftBtnMin) {
+      ftBtnMin.addEventListener('click', () => {
+        ftWindow.classList.toggle('minimized');
+      });
+    }
+    if (ftBtnMax) {
+      ftBtnMax.addEventListener('click', () => {
+        ftWindow.classList.toggle('maximized');
+      });
+    }
+
+    // Draggable floating terminal
+    let isDragging = false, dragStartX = 0, dragStartY = 0, initialLeft = 0, initialTop = 0;
+    if (ftTitlebar && ftWindow) {
+      ftTitlebar.addEventListener('mousedown', e => {
+        if (e.target.closest('.ft-controls')) return;
+        isDragging = true;
+        dragStartX = e.clientX;
+        dragStartY = e.clientY;
+        const rect = ftWindow.getBoundingClientRect();
+        initialLeft = rect.left;
+        initialTop = rect.top;
+        ftWindow.style.transform = 'none';
+        ftWindow.style.left = initialLeft + 'px';
+        ftWindow.style.top = initialTop + 'px';
+      });
+      window.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const dx = e.clientX - dragStartX;
+        const dy = e.clientY - dragStartY;
+        ftWindow.style.left = (initialLeft + dx) + 'px';
+        ftWindow.style.top = (initialTop + dy) + 'px';
+      });
+      window.addEventListener('mouseup', () => { isDragging = false; });
+    }
+
+    function closeAllHackedPopups() {
+      stopContinuousErrors();
+      closeFloatingTerminal();
+      const container = document.getElementById('hacked-container');
+      if (container) container.innerHTML = '';
+    }
+
+    function openFloatingTerminal() {
+      if (!ftWindow) return;
+      ftCharIndex = 0;
+      ftLogExecuted = false;
+      stopContinuousErrors();
+      ftWindow.classList.remove('minimized');
+      ftWindow.classList.add('open');
+      ftWindow.style.transform = 'translate(-50%, -50%) scale(1)';
+      ftWindow.style.top = '50%';
+      ftWindow.style.left = '50%';
+      if (ftCmdTyped) ftCmdTyped.textContent = '';
+      if (ftCursor) ftCursor.style.display = 'inline-block';
+      const promptLine = document.getElementById('ft-prompt-line');
+      if (promptLine) promptLine.style.display = 'flex';
+      if (ftHistory) {
+        ftHistory.innerHTML = `
+        <div style="color:#64748b;margin-bottom:8px">Last login: Today 22:10:04 on pts/2 from 192.168.1.104</div>
+      `;
+      }
+    }
+
+    function closeFloatingTerminal() {
+      if (ftWindow) ftWindow.classList.remove('open', 'minimized', 'maximized');
+    }
+
+    function toggleFloatingTerminal() {
+      if (!ftWindow) return;
+      if (ftWindow.classList.contains('open')) closeFloatingTerminal();
+      else openFloatingTerminal();
+    }
+
+    // Execute the audit execution log inside Terminal 2 and sync to Terminal 1
+    function executeFloatingTerminalLog() {
+      if (ftLogExecuted) return;
+      ftLogExecuted = true;
+      execLogTriggered = true;
+      stopContinuousErrors();
+
+      if (ftCmdTyped) ftCmdTyped.textContent = scene6LogCmd;
+      if (ftCursor) ftCursor.style.display = 'none';
+      const promptLine = document.getElementById('ft-prompt-line');
+      if (promptLine) promptLine.style.display = 'none';
+
+      // Output into Floating Terminal 2
+      if (ftHistory) {
+        ftHistory.innerHTML = `
+        <div style="color:#64748b;margin-bottom:6px">Last login: Today 22:10:04 on pts/2 from 192.168.1.104</div>
+        <div style="margin-bottom:8px"><span style="color:var(--blue)">jake@workstation:~$</span> ${scene6LogCmd}</div>
+        <div style="color:#a9b8ca;font-size:11px">[OK] Connecting to local audit subsystem...</div>
+        <div style="color:#a9b8ca;font-size:11px">[OK] Audit trail session: #AUD-2026-9014 (Read-Only)</div>
+        <div class="execution-log-card">
+          <div class="exec-log-header">
+            <span class="exec-log-badge"><i class="dot" style="background:var(--red);box-shadow:0 0 8px var(--red)"></i> AUDIT TRAIL LOG · PAYCORE-01</span>
+            <span>SESSION ID: #AUD-2026-9014</span>
+          </div>
+          <div class="exec-log-title">EXECUTION LOG</div>
+          <div class="exec-log-grid">
+            <div class="exec-key">User:</div>
+            <div class="exec-val"><span class="highlight-user">jake_admin</span></div>
+            <div class="exec-key">Remote IP:</div>
+            <div class="exec-val"><span class="highlight-ip">192.168.1.104</span> <span style="color:#94a3b8;font-size:10px">[Jake's IP]</span></div>
+            <div class="exec-key">Action:</div>
+            <div class="exec-val">Configuration update</div>
+            <div class="exec-key">Status:</div>
+            <div class="exec-val"><span class="highlight-status">Failed</span></div>
+            <div class="exec-key">Timestamp:</div>
+            <div class="exec-val">22:25:31 UTC</div>
+            <div class="exec-key">Auth Key:</div>
+            <div class="exec-val" style="color:#f87171">Signed by jake_admin_privkey</div>
+          </div>
+          <div class="exec-log-footer">
+           
+          </div>
+        </div>
+      `;
+        const ftBody = document.getElementById('ft-body');
+        if (ftBody) ftBody.scrollTop = ftBody.scrollHeight;
+      }
+    }
+
+    function runScene6ExecutionLog() {
+      openFloatingTerminal();
+    }
+
+    function triggerMeltdown() {
+      meltdownActive = true;
+      appRoot.classList.add('meltdown');
+
+      // UI transforms to RED
+      healthBadge.innerHTML = '<i class="dot" style="background:var(--red);box-shadow:0 0 14px var(--red)"></i> CRITICAL FAILURE · SYSTEM DOWN';
+      healthBadge.style.color = '#ff6b84';
+      healthBadge.style.borderColor = 'rgba(255,77,109,.7)';
+      healthBadge.style.background = 'rgba(255,77,109,.2)';
+
+      document.getElementById('live-dot').style.background = 'var(--red)';
+      document.getElementById('live-dot').style.boxShadow = '0 0 12px var(--red)';
+      document.getElementById('live-text').textContent = 'CRITICAL ALERT';
+      document.getElementById('live-text').style.color = 'var(--red)';
+      document.getElementById('env-badge').textContent = 'OFFLINE / BREACH';
+      document.getElementById('env-badge').style.color = 'var(--red)';
+
+      serviceStatus.textContent = 'CRASHED';
+      serviceStatus.style.color = 'var(--red)';
+      alertsStatus.textContent = 'CRITICAL (9+)';
+      alertsStatus.style.color = 'var(--red)';
+
+      // Spiked / Errored metrics
+      cpuEl.textContent = '99';
+      cpuEl.style.color = 'var(--red)';
+      cpuBar.style.width = '99%';
+      cpuBar.style.background = 'var(--red)';
+      document.getElementById('cpu-sub').textContent = '▲ CRITICAL OVERLOAD';
+      document.getElementById('cpu-sub').className = 'red';
+
+      memEl.textContent = '98';
+      memEl.style.color = 'var(--red)';
+      memBar.style.width = '98%';
+      memBar.style.background = 'var(--red)';
+      document.getElementById('mem-sub').textContent = 'OUT OF MEMORY';
+      document.getElementById('mem-sub').className = 'red';
+      document.getElementById('mem-detail').textContent = '· 7.9 GB / 8 GB';
+
+      rpsEl.textContent = '0';
+      rpsEl.style.color = 'var(--red)';
+      rpsBar.style.width = '0%';
+      document.getElementById('rps-sub').textContent = 'SYSTEM HALTED';
+
+      latEl.textContent = 'ERR';
+      document.getElementById('lat-unit').textContent = '';
+      latEl.style.color = 'var(--red)';
+      latBar.style.width = '100%';
+      document.getElementById('lat-sub').textContent = 'TIMEOUT (>15,000ms)';
+
+      termInput.placeholder = '';
+      chatState.textContent = 'Disconnected';
+      chatState.style.color = 'var(--red)';
+    }
+
+    // Director & Actor Hotkeys (No on-screen buttons to preserve film realism):
+    // F4 or Alt+4 -> Scene 4
+    // F5 or Alt+5 -> Scene 5
+    // F6 or Alt+6 -> Scene 6
+    // F8 or Alt+M -> Instant Meltdown
+    // F9 or Alt+R -> Reset Current Scene / Take
+    // Escape -> Dismiss Hacked Alert Popups
+    window.addEventListener('keydown', e => {
+      const ftIsOpen = ftWindow && ftWindow.classList.contains('open');
+
+      // 1. IF TERMINAL 2 IS OPEN: ACTOR TYPES THE PREDESTINED LETTERS!
+      if (ftIsOpen) {
+        if (e.key === 'Escape') {
+          e.preventDefault();
+          closeFloatingTerminal();
+          return;
+        }
+        if (ftLogExecuted) return;
+
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          executeFloatingTerminalLog();
+          return;
+        }
+        if (e.key === 'Tab') {
+          e.preventDefault();
+          ftCharIndex = scene6LogCmd.length;
+          if (ftCmdTyped) ftCmdTyped.textContent = scene6LogCmd;
+          return;
+        }
+        if (e.metaKey || e.ctrlKey || e.altKey) return;
+        if (e.key === 'Backspace') {
+          e.preventDefault();
+          if (ftCharIndex > 0) {
+            ftCharIndex--;
+            const val = scene6LogCmd.slice(0, ftCharIndex);
+            if (ftCmdTyped) ftCmdTyped.textContent = val;
+          }
+          return;
+        }
+        if (e.key.length === 1) {
+          e.preventDefault();
+          if (ftCharIndex < scene6LogCmd.length) {
+            ftCharIndex++;
+            const val = scene6LogCmd.slice(0, ftCharIndex);
+            if (ftCmdTyped) ftCmdTyped.textContent = val;
+          }
+          return;
+        }
+        return;
+      }
+
+      // 2. IF TERMINAL 2 IS NOT OPEN:
+      // Press '1' to open Terminal 2!
+      if (e.key === '1' && document.activeElement !== chatInput) {
+        e.preventDefault();
+        openFloatingTerminal();
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        const container = document.getElementById('hacked-container');
+        if (container && container.lastElementChild) {
+          closeHackedPopup(container.lastElementChild.id);
+        }
+      } else if (e.key === 'F4' || (e.altKey && e.key === '4')) {
+        e.preventDefault();
+        initScene4();
+      } else if (e.key === 'F5' || (e.altKey && e.key === '5')) {
+        e.preventDefault();
+        initScene5(false);
+      } else if (e.key === 'F6' || (e.altKey && e.key === '6')) {
+        e.preventDefault();
+        initScene6();
+      } else if (e.key === 'F7' || (e.altKey && (e.key === 'l' || e.key === 'L' || e.key === '1')) || (currentScene === 6 && (e.key === 'l' || e.key === 'L') && document.activeElement !== chatInput)) {
+        e.preventDefault();
+        toggleFloatingTerminal();
+      } else if (e.key === 'F8' || (e.altKey && (e.key === 'm' || e.key === 'M'))) {
+        e.preventDefault();
+        triggerMeltdown();
+        incidentBanner.classList.add('show');
+      } else if (e.key === 'F9' || (e.altKey && (e.key === 'r' || e.key === 'R'))) {
+        e.preventDefault();
+        if (currentScene === 4) initScene4();
+        else if (currentScene === 5) initScene5(false);
+        else initScene6();
+      }
+    });
+
+    console.log('🎬 Film Prop Shortcuts: F4=Scene 4 | F5=Scene 5 | F6=Scene 6 | F7=Execution Log | F8=Meltdown | F9=Reset Take (or Alt+4/5/6/L/M/R)');
+
+    document.querySelector('.terminal').addEventListener('click', () => {
+      if (currentScene !== 6 && !scriptRunning) {
+        termInput.focus();
+      }
+    });
+    chatInput.addEventListener('focus', () => {
+      if (!replyPending && !meltdownActive) chatState.textContent = 'Encrypted';
+    });
+
+    // Start at Scene 4 by default
+    initScene4();
+  </script>
+</body>
+
+</html>

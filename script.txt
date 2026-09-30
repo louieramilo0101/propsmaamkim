@@ -1,0 +1,176 @@
+[scene 4]
+Remote work:
+Jake opens his laptop. The screen shows the server dashboard.
+
+SERVER STATUS
+Server: PAYCORE-01
+OS: Linux
+CPU Usage: 68%
+Memory Usage: 74%
+Service Status: Running
+Backup Status: Pending
+Alerts: 3
+
+I begin to work.
+
+“First, iche-check ko muna yung server status, memory usage, and running services. Hindi pwedeng basta mag- restart ng service without checking the logs.” i said then open the system log.
+
+SYSTEM LOG
+Warning: High request volume
+Warning: Service response delay
+Backup: Not completed
+
+I sent a message to the client.
+
+Chat
+JAKE:
+Sir, may warning po sa server. Mataas yung requests and may delay sa payment service.
+
+CLIENT:
+Can you fix it?
+
+JAKE:
+I will check the logs first. I also recommend checking the backup before making major changes.
+
+CLIENT:
+No need. Just restart the service. We need the system running immediately.
+
+I paused.
+
+JAKE:
+Sir, may maintenance procedure po ba kayo for this?
+
+CLIENT:
+Just follow the instructions I sent. We don’t have time.
+
+I reluctantly proceeded.
+
+[scene 5] suspicious maintenance task
+The client sends me a file or script described as a system optimization tool.
+
+Chat
+CLIENT:
+Download this maintenance tool. It will automatically clean the system cache and improve performance.
+
+JAKE:
+Is this already tested po?
+
+CLIENT:
+Yes. All administrators use it. Just run it with administrator access.
+
+I looks at the file.
+
+maintenance_update.sh
+Requested permission: Administrator
+
+I hesitates but  then runs it.
+
+
+
+Visual sequence:
+1. Jake downloads the file.
+2. He opens the terminal.
+3. The screen shows fake maintenance progress.
+4. Several warnings appear.
+5. The payment service becomes unresponsive.
+6. The server dashboard turns red.
+
+The screen shows…
+MAINTENANCE IN PROGRESS…
+Checking services…
+Updating configuration…
+Restarting payment service…
+ERROR: Transaction queue unavailable
+
+I suddenly became nervous.
+
+JAKE:
+“Wait lang… bakit nag-error?”
+
+
+[scene 6] the system failure
+The screen flickered with different errors. 
+
+INCIDENT ALERT
+Payment processing service unavailable
+Transaction queue errors detected
+Multiple requests failed
+System rollback required
+
+I immediately messaged the client.
+
+Chat
+JAKE:
+Sir, nagka-error po yung payment service after the maintenance task.
+
+CLIENT:
+What did you do?
+
+JAKE:
+I followed the instructions po. The service started failing after the update.
+
+CLIENT:
+You were responsible for the maintenance. Fix it now.
+
+JAKE:
+I need access to the backup and recovery procedure po.
+
+CLIENT:
+There is no time for that. Just restore the system.
+
+Jake checks the logs.
+
+
+Screen text:
+
+EXECUTION LOG
+User: jake_admin
+Remote IP: [Jake’s IP]
+Action: Configuration update
+Status: Failed
+
+My expression changes.
+
+“May gumagamit ba ng account ko?” I asked full and mixed of emotions.
+
+What if I've been set up?
+
+[scene 7] the phone call
+Phone call
+
+SYNDICATE:
+“Anong ginawa mo sa system?”
+
+JAKE:
+“Sinunod ko lang po yung instructions ninyo!”
+
+SYNDICATE:
+“Three thousand payment requests failed. Millions were affected.”
+
+JAKE:
+“Sir, may error po sa service. Kailangan natin i-check yung backup and logs.”
+
+SYNDICATE:
+“Don’t act smart. Your administrator account was used.”
+
+JAKE:
+“Pero hindi ko po sinadyang—”
+
+SYNDICATE:
+“Your IP address is in the execution log. Ikaw ang may pananagutan.”
+
+Jake realizes that the client has access to his identity and work records.
+
+SYNDICATE:
+“You took the money. Now you will take responsibility.”
+
+I didn't waste any time. I hang up and grab my thing to  run. I run into different streets avoiding the crowded or possible place being cornered. 
+
+I stop on the cross street gasping for breath.
+
+“Ayun sya!” one of the men wearing all black shouted while pointing at me. 
+
+His group followed. I ran again until…
+
+[black-out]
+
